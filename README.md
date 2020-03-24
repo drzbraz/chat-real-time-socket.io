@@ -6,6 +6,6 @@ Desenvolvido um chat de interação real time com socket.io
 * Enviar mensagem ao grupo
 
 ### Requisitos
-* yarn add nodemon
+* npm install
 * Para executar bastar digitar 'yarn start'
 

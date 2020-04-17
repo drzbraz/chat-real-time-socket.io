@@ -1,9 +1,15 @@
-import express from 'express';
-import path from 'path';
-const app = express();
+const restify = require ('restify');
+const ManageRoute = require('./src/routes/manage-routes')
+require('dotenv').config({path: '.env'})
+const server = require('http').restify.createServer(); 
+
+server.use(restify.plugins.queryParser({mapParams: false}))
+server.use(restify.plugins.jsonBodyParser({mapParams: true}))
+
+const path = require('path');
+const MongoDB = require('./src/database');
 
 
-const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 app.use(express.static(path.join(__dirname,'../public')));
@@ -31,10 +37,19 @@ function findID(data, messages){
 io.on('connection', onConnect);
 
 function onConnect(socket){
+
     socket.emit('previousMessage', messages);
 
     socket.on('sendMessage', data => {
     messages.push(data);   
+    MongoDB.insertData(data);
+
+    producer.send({
+        topic: 'test-topic',
+        messages: [
+            {value: data},
+        ],
+    })
 
     if(data.friend){   
         io.to(`${findID(data, messages)}`).emit('receivedMessage', data);  
@@ -44,4 +59,6 @@ function onConnect(socket){
     });
 };
 
-server.listen(3000);
+return server.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
+})

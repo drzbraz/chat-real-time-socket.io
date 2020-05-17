@@ -1,5 +1,5 @@
 # chat-real-time-socket-io
-Desenvolvido um chat de interação real time com socket.io
+Desenvolvido um chat de interação real time com socket.io e mongoDB
 
 ### Funcionalidades Desenvolvidas
 * Enviar mensagem direta
